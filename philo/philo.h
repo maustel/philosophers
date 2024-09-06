@@ -1,0 +1,64 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
+/*   Updated: 2024/09/06 16:45:40 by maustel          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <limits.h>
+#include <sys/time.h>
+#include <stdbool.h>
+
+typedef pthread_mutex_t t_mtx;
+typedef struct s_fork t_fork;
+typedef struct s_philo t_philo;
+
+typedef struct s_arguments
+{
+	int		nbr_philos;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	int		nbr_must_eat;
+	long	start_simulation;
+	bool	end_simulation; // a philo dies or all philos are full
+	t_fork	*forks; //array to all our forks
+	t_philo	*philos; //array to all our philos
+}				t_arguments;
+
+
+typedef struct s_fork
+{
+	t_mtx	fork;
+	int		fork_id;
+}				t_fork;
+
+
+// ./philo 5 800 200 200 [6]
+typedef struct s_philo
+{
+	int			id;
+	long		meals_count;
+	bool		full;
+	long		last_meal_time;
+	t_fork		*left_fork;
+	t_fork		*right_fork;
+	pthread_t	thread_id;
+	t_arguments	*args;
+}				t_philo;
+
+
+
+void	free_all(t_arguments *args);
+void	error_exit(const char *error);
+void	parsing(int argc, char **argv, t_arguments *args);
+void	*safe_malloc(int bytes);
