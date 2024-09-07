@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:09:31 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:24:20 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:42:45 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	free_all(t_arguments *args)
 	if (args->forks)
 		free (args->forks);
 }
+
 void	error_exit(t_arguments *args, char *error)
 {
 	if (args)

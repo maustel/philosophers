@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:22 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:13:44 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:43:35 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	test_function(t_arguments *args)
 	printf("nbr_must_eat: %d\n", args->nbr_must_eat);
 	printf("start_simulation: %ld\n", args->start_simulation);
 	printf("end_simulation: %d\n\n", args->end_simulation);
-	i= 0;
+	i = 0;
 	while (i < args->nbr_philos)
 	{
 		printf("philo id: %d\n", args->philos[i].id);
@@ -39,17 +39,15 @@ void	test_function(t_arguments *args)
 
 int	main(int argc, char	**argv)
 {
-	t_arguments args;
+	t_arguments	args;
 
 	if (argc < 5 || argc > 6)
 	{
 		error_exit(NULL, "Wrong amount of arguments!");
 	}
 	parsing(argc, argv, &args);
-
 	data_init(&args);
 	test_function(&args);
-
 	// dinner_start(args);
 	// clean (args); 	//philos full or one died
 

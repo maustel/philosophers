@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:18:58 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:46:55 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
-typedef pthread_mutex_t t_mtx;
-typedef struct s_fork t_fork;
-typedef struct s_philo t_philo;
+typedef pthread_mutex_t	t_mtx;
+typedef struct s_fork	t_fork;
+typedef struct s_philo	t_philo;
 
 typedef struct s_arguments
 {
@@ -35,13 +35,11 @@ typedef struct s_arguments
 	t_philo	*philos; //array to all our philos
 }				t_arguments;
 
-
 typedef struct s_fork
 {
 	t_mtx	fork;
 	int		fork_id;
 }				t_fork;
-
 
 // ./philo 5 800 200 200 [6]
 typedef struct s_philo
@@ -55,8 +53,6 @@ typedef struct s_philo
 	pthread_t	thread_id;
 	t_arguments	*args;
 }				t_philo;
-
-
 
 // void	free_all(t_arguments *args);
 void	error_exit(t_arguments *args, char *error);
