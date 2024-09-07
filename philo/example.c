@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:20:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/06 10:36:26 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 10:41:38 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #define NUM_THREADS 5
 #define COUNT_MAX 1000
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex;
 volatile int count = 0;
 
 void* increment_counter(void* arg)
@@ -29,7 +29,7 @@ void* increment_counter(void* arg)
     while (i < iterations) {
         pthread_mutex_lock(&mutex);
         count++;
-		printf("count1: %d\n", count);
+		// printf("count1: %d\n", count);
         pthread_mutex_unlock(&mutex);
         // Simulate some work
         usleep(rand() % 1000);
@@ -47,26 +47,28 @@ int main() {
 	int i = 0;
 
     printf("Creating %d threads...\n", NUM_THREADS);
-
-/*create and start all threads*/
+	pthread_mutex_init(&mutex, NULL);
+	/*create and start all threads*/
     while (i < NUM_THREADS)
 	{
         thread_args[i] = iterations_per_thread;
-		printf("thread %d\n", i);
-        if (!pthread_create(&threads[i], NULL, increment_counter, &thread_args[i]))
-			exit(0);
-		//wait for each thread to complete before creating a new one
-        if (!pthread_join(threads[i], NULL))
-			exit(0);
+		printf("thread %d started\n", i);
+        if (pthread_create(&threads[i], NULL, increment_counter, &thread_args[i]))
+			exit(1);
+		/*wait for each thread to complete before creating a new one
+		--> only one thread at a time. WRONG!!*/
+        // if (pthread_join(threads[i], NULL))
+		// 	exit(2);
 		i++;
     }
     printf("Waiting for threads to complete...\n");
-	/*wait for threads to complete -> creates race conditions here*/
-	// i = 0;
-    // while (i < NUM_THREADS) {
-    //     pthread_join(threads[i], NULL);
-	// 	i++;
-    // }
+	/*wait for all threads to complete --> threads are working parallel */
+	i = 0;
+    while (i < NUM_THREADS) {
+		printf("thread %d finished\n", i);
+        pthread_join(threads[i], NULL);
+		i++;
+    }
     printf("Final count: %d\n", count);
 
     return 0;

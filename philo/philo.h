@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/06 16:45:40 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 11:42:23 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ typedef struct s_philo
 	long		meals_count;
 	bool		full;
 	long		last_meal_time;
-	t_fork		*left_fork;
-	t_fork		*right_fork;
+	t_fork		*first_fork;
+	t_fork		*second_fork;
 	pthread_t	thread_id;
 	t_arguments	*args;
 }				t_philo;
@@ -62,3 +62,4 @@ void	free_all(t_arguments *args);
 void	error_exit(const char *error);
 void	parsing(int argc, char **argv, t_arguments *args);
 void	*safe_malloc(int bytes);
+void	data_init(t_arguments *args);
