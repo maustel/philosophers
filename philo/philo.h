@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 11:42:23 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:18:58 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ typedef struct s_philo
 
 
 
-void	free_all(t_arguments *args);
-void	error_exit(const char *error);
+// void	free_all(t_arguments *args);
+void	error_exit(t_arguments *args, char *error);
 void	parsing(int argc, char **argv, t_arguments *args);
-void	*safe_malloc(int bytes);
+void	*safe_malloc(t_arguments *args, int bytes);
 void	data_init(t_arguments *args);

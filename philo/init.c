@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 11:57:38 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:18:39 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ void	data_init(t_arguments *args)
 
 	i = 0;
 	args->end_simulation = false;
-	args->philos = safe_malloc(sizeof(t_philo) * args->nbr_philos);
-	args->forks = safe_malloc(sizeof(t_fork) * args->nbr_philos);
+	args->philos = NULL;
+	args->forks = NULL;
+	args->philos = safe_malloc(args, sizeof(t_philo) * args->nbr_philos);
+	args->forks = safe_malloc(args, sizeof(t_fork) * args->nbr_philos);
 	while (i < args->nbr_philos)
 	{
 		if (pthread_mutex_init(&(args->forks[i].fork), NULL) != 0)
-			error_exit("pthread init failed");
+			error_exit(args, "pthread init failed");
 		args->forks[i].fork_id = i;
 		i++;
 	}

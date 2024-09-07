@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:22 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:09:11 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:13:44 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	main(int argc, char	**argv)
 
 	if (argc < 5 || argc > 6)
 	{
-		error_exit("Wrong amount of arguments!");
+		error_exit(NULL, "Wrong amount of arguments!");
 	}
 	parsing(argc, argv, &args);
 

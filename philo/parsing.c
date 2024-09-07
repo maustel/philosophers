@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:34:35 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/06 14:37:38 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:26:56 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,13 @@ static int	philo_atoi(char *str)
 	while ((*str < 14 && *str > 8) || *str == 32)
 		str++;
 	minus = 1;
-	if (*str == '-' || *str == '+')
+	if (*str == '+')
 		str++;
 	if (*str == '-')
-			error_exit("only positive numbers are valid!");
-
+			error_exit(NULL, "Only positive numbers are valid!");
 	nbr = 0;
 	if (*str < '0' || *str > '9')
-		error_exit("input is not a legit number!");
+		error_exit(NULL, "Input is not a legit number!");
 	len = 0;
 	while (str && '0' <= *str && *str <= '9')
 	{
@@ -38,7 +37,7 @@ static int	philo_atoi(char *str)
 		len++;
 	}
 	if (len > 10 || nbr > INT_MAX)
-		error_exit("value too big, INT_MAX is limit!");
+		error_exit(NULL, "Value too big, INT_MAX is limit!");
 	return ((int)(nbr * minus));
 }
 /*
@@ -56,8 +55,8 @@ void	parsing(int argc, char **argv, t_arguments *args)
 	if (args->time_to_die < 6e4 || args->time_to_eat < 6e4 ||
 		 args->time_to_sleep < 6e4)
 		{
-			error_exit("use timestamps major than 60ms!\n");
+			error_exit(NULL, "Use timestamps major than 60ms!\n");
 		}
 	if (args->nbr_philos <= 0 || args->nbr_philos > 200)
-		error_exit("Number of philos must be between 1 and 200!");
+		error_exit(NULL, "Number of philos must be between 1 and 200!");
 }
