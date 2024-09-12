@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:18:39 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/12 13:25:12 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,17 @@ static void	init_philos(t_arguments *args)
 	}
 }
 
-/*initalize rest of the values as well as every philo and every fork*/
+/*initalize rest of the values as well as every philo and every fork
+./philo [number philos][time_to_die][time_to_eat][time_to_sleep][nbr_must_eat]*/
 void	data_init(t_arguments *args)
 {
 	int	i;
 
 	i = 0;
 	args->end_simulation = false;
+	args->all_threads_ready = false;
+	if (pthread_mutex_init(&(args->args_mutex), NULL) != 0)
+		error_exit(args, "pthread init failed");
 	args->philos = NULL;
 	args->forks = NULL;
 	args->philos = safe_malloc(args, sizeof(t_philo) * args->nbr_philos);

@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:46:55 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/12 17:59:45 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct s_arguments
 	int		nbr_must_eat;
 	long	start_simulation;
 	bool	end_simulation; // a philo dies or all philos are full
+	bool	all_threads_ready;
+	t_mtx	args_mutex;
 	t_fork	*forks; //array to all our forks
 	t_philo	*philos; //array to all our philos
 }				t_arguments;
@@ -54,8 +56,18 @@ typedef struct s_philo
 	t_arguments	*args;
 }				t_philo;
 
+typedef enum e_time_code
+{
+	SECOND,
+	MILLISECOND,
+	MICROSECOND
+}				t_time_code;
+
 // void	free_all(t_arguments *args);
 void	error_exit(t_arguments *args, char *error);
 void	parsing(int argc, char **argv, t_arguments *args);
 void	*safe_malloc(t_arguments *args, int bytes);
 void	data_init(t_arguments *args);
+void	meal_start(t_arguments *args);
+long	gettime(t_arguments *args, t_time_code time_code);
+bool	simulation_finished(t_arguments *args);

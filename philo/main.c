@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:22 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:43:35 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/12 17:34:40 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void	test_function(t_arguments *args)
 	int	i;
 
 	printf("\nnbr_philos: %d\n", args->nbr_philos);
-	printf("time_to_die: %d\n", args->time_to_die);
-	printf("time_to_eat: %d\n", args->time_to_eat);
-	printf("time_to_sleep: %d\n", args->time_to_sleep);
+	printf("time_to_die: %d\n", args->time_to_die/1000);
+	printf("time_to_eat: %d\n", args->time_to_eat/1000);
+	printf("time_to_sleep: %d\n", args->time_to_sleep/1000);
 	printf("nbr_must_eat: %d\n", args->nbr_must_eat);
 	printf("start_simulation: %ld\n", args->start_simulation);
 	printf("end_simulation: %d\n\n", args->end_simulation);
@@ -47,8 +47,8 @@ int	main(int argc, char	**argv)
 	}
 	parsing(argc, argv, &args);
 	data_init(&args);
+	meal_start(&args);
 	test_function(&args);
-	// dinner_start(args);
 	// clean (args); 	//philos full or one died
 
 	return (0);

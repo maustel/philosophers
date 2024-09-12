@@ -6,12 +6,14 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:34:35 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/07 12:44:49 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/12 11:38:04 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/*Error should occur when input i negative number, inpout > INT_MAX, input not
+legit number, imestamps smaller than 60ms, number of philos > 200 */
 static int	philo_atoi(char *str)
 {
 	long long	nbr;
