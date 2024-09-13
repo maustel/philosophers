@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/12 13:25:12 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/13 14:08:47 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,16 @@ static void	init_philos(t_arguments *args)
 		args->philos[i].last_meal_time = 0;
 		args->philos[i].args = args;
 		assign_forks(&args->philos[i], args->forks, i);
+		safe_mutex(args, &args->philos[i].philo_mutex, INIT);
 		i++;
 	}
 }
 
-/*initalize rest of the values as well as every philo and every fork
-./philo [number philos][time_to_die][time_to_eat][time_to_sleep][nbr_must_eat]*/
+/*
+	initalize rest of the values as well as every philo and every fork
+
+	./philo [number philos][time_to_die][time_to_eat][time_to_sleep][nbr_must_eat]
+*/
 void	data_init(t_arguments *args)
 {
 	int	i;
@@ -56,16 +60,15 @@ void	data_init(t_arguments *args)
 	i = 0;
 	args->end_simulation = false;
 	args->all_threads_ready = false;
-	if (pthread_mutex_init(&(args->args_mutex), NULL) != 0)
-		error_exit(args, "pthread init failed");
+	safe_mutex(args, &args->args_mutex, INIT);
+	safe_mutex(args, &args->write_mutex, INIT);
 	args->philos = NULL;
 	args->forks = NULL;
 	args->philos = safe_malloc(args, sizeof(t_philo) * args->nbr_philos);
 	args->forks = safe_malloc(args, sizeof(t_fork) * args->nbr_philos);
 	while (i < args->nbr_philos)
 	{
-		if (pthread_mutex_init(&(args->forks[i].fork), NULL) != 0)
-			error_exit(args, "pthread init failed");
+		safe_mutex(args, &args->forks[i].fork, INIT);
 		args->forks[i].fork_id = i;
 		i++;
 	}

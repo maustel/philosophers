@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/12 17:59:28 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/13 15:08:50 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,48 +22,56 @@
 	4) Join everyone
 */
 
-
-
-/*
-	check if args->all_threads_ready - flag is already set to true
-	(is set in meal_start)
-*/
-bool	philos_ready(t_arguments *args)
+static void	think(t_arguments *args, t_philo philo)
 {
-	bool	ready;
-
-	ready = false;
-	pthread_mutex_lock(&args->args_mutex);
-	if (args->all_threads_ready == true)
-		ready = true;
-	else
-		ready = false;
-	pthread_mutex_unlock(&args->args_mutex);
-	return (ready);
+	print_status(args, philo, THINK);
 }
 
+static void	sleeping(t_arguments *args, t_philo philo)
+{
+	print_status(args, philo, SLEEP);
+	exact_usleep(args->time_to_sleep, args);
+}
+
+static void	eat(t_arguments *args, t_philo *philo)
+{
+	//take forks
+	safe_mutex(args, &philo->first_fork->fork, LOCK);
+	safe_mutex(args, &philo->second_fork->fork, LOCK);
+	//eat: print eat, update lastmeal-status, update mealscount, check if full
+	print_status(args, *philo, EAT);
+	set_long(args, philo->philo_mutex, &philo->last_meal_time,
+			gettime_us(args) - (long)args->start_simulation);
+	set_long(args, philo->philo_mutex, &philo->meals_count,
+			philo->meals_count + 1);
+	if (args->nbr_must_eat == philo->meals_count)
+		philo->full = true;
+	//release forks
+	safe_mutex(args, &philo->first_fork->fork, UNLOCK);
+	safe_mutex(args, &philo->second_fork->fork, UNLOCK);
+}
 
 /*
 	synchronize beginning of simulation
 	-> wait for all philos
 	->every philo starts simultaneously
 	wait for all threads -> waitingloop
+	check if args->all_threads_ready - flag is already set to true
+	(is set in meal_start)
 */
-void	*meal_simulation(void *data)
+void	*meal_simulation(t_philo *philo)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)data;
-	while (!philos_ready(philo->args))
+	while (!get_bool(philo->args, philo->args->args_mutex,
+			philo->args->all_threads_ready))
 		usleep(10);
-	return (NULL);
-	while (!simulation_finished(philo->args))
+	while (!simulation_finished(philo->args) && !philo->full)
 	{
-		//1) philo full? -> break
-		//2) eat
-		//3) sleep ->write_status + better_usleep
-		//4) think
+		eat(philo->args, philo);
+		// philo full? -> break?
+		sleeping(philo->args, *philo);
+		think(philo->args, *philo);
 	}
+	return (NULL);
 }
 
 
@@ -77,9 +85,8 @@ void	create_philo_threads(t_arguments *args)
 	i = 0;
 	while (i < args->nbr_philos)
 	{
-		if (pthread_create(&args->philos[i].thread_id, NULL, meal_simulation,
-				&args->philos[i]))
-			error_exit(args, "error with pthread_creates");
+		safe_thread(args, &args->philos[i].thread_id, meal_simulation,
+				&args->philos[i], CREATE);
 		i++;
 	}
 }
@@ -98,15 +105,12 @@ void	meal_start(t_arguments *args)
 		;//TODO
 	else
 		create_philo_threads(args);
-	args->start_simulation = gettime(args, MILLISECOND);
-	pthread_mutex_lock(&args->args_mutex);
-	args->all_threads_ready = true;
-	pthread_mutex_unlock(&args->args_mutex);
+	args->start_simulation = gettime_us(args);
+	set_bool(args, args->args_mutex, &args->all_threads_ready, true);
 	i = 0;
 	while (i < args->nbr_philos)
 	{
-		if (pthread_join(args->philos[i].thread_id, NULL))
-			error_exit(args, "Error pthread_join");
+		safe_thread(args, &args->philos[i].thread_id, NULL, NULL, JOIN);
 		i++;
 	}
 }

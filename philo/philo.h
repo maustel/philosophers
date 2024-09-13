@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/12 17:59:45 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/13 15:11:16 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_arguments
 	bool	end_simulation; // a philo dies or all philos are full
 	bool	all_threads_ready;
 	t_mtx	args_mutex;
+	t_mtx	write_mutex;
 	t_fork	*forks; //array to all our forks
 	t_philo	*philos; //array to all our philos
 }				t_arguments;
@@ -53,21 +54,48 @@ typedef struct s_philo
 	t_fork		*first_fork;
 	t_fork		*second_fork;
 	pthread_t	thread_id;
+	t_mtx		philo_mutex;
 	t_arguments	*args;
 }				t_philo;
 
-typedef enum e_time_code
+typedef enum e_safe_thread
 {
-	SECOND,
-	MILLISECOND,
-	MICROSECOND
-}				t_time_code;
+	CREATE,
+	JOIN,
+	DETACH
+}				t_safe_thread;
+
+typedef enum e_safe_mutex
+{
+	INIT,
+	LOCK,
+	UNLOCK,
+	DESTROY
+}				t_safe_mutex;
+
+typedef enum e_philo_stauts
+{
+	FORK,
+	EAT,
+	SLEEP,
+	THINK,
+	DIED
+}				t_philo_status;
 
 // void	free_all(t_arguments *args);
 void	error_exit(t_arguments *args, char *error);
 void	parsing(int argc, char **argv, t_arguments *args);
 void	*safe_malloc(t_arguments *args, int bytes);
+void	safe_thread(t_arguments *args, pthread_t *thread_id,
+		void* (*function)(void *), void *arg, t_safe_thread todo);
+void	safe_mutex(t_arguments *args, t_mtx *mutex, t_safe_mutex todo);
 void	data_init(t_arguments *args);
 void	meal_start(t_arguments *args);
-long	gettime(t_arguments *args, t_time_code time_code);
+long	gettime_us(t_arguments *args);
 bool	simulation_finished(t_arguments *args);
+void	exact_usleep(long sleeptime_us, t_arguments *args);
+bool	get_bool(t_arguments *args, t_mtx mutex, bool value);
+void	set_bool(t_arguments *args, t_mtx mutex, bool *dest, bool value);
+void	set_long(t_arguments *args, t_mtx mutex, long *dest, long value);
+bool	get_long(t_arguments *args, t_mtx mutex, long dest);
+void	print_status(t_arguments *args, t_philo philo, t_philo_status status);

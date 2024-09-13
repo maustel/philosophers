@@ -6,7 +6,7 @@
 #    By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:29:49 by maustel           #+#    #+#              #
-#    Updated: 2024/09/12 17:10:32 by maustel          ###   ########.fr        #
+#    Updated: 2024/09/13 14:39:26 by maustel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 NAME = philo
 FLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c free.c parsing.c init.c safe_functions.c meal.c utils.c
+SRCS = main.c free.c parsing.c init.c safe_functions.c meal.c utils.c get_set.c output.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
