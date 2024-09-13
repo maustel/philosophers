@@ -1,0 +1,35 @@
+0   2 has taken a fork
+first: 1
+0   2 has taken a fork
+second: 2
+0   2 is eating
+0   3 has taken a fork
+first: 3
+0   5 has taken a fork
+first: 0
+0   5 has taken a fork
+second: 4
+0   5 is eating
+400   2 is sleeping
+400   1 has taken a fork
+first: 1
+400   5 is sleeping
+400   1 has taken a fork
+second: 0
+400   1 is eating
+400   3 has taken a fork
+second: 2
+400   3 is eating
+800   2 is thinking
+800   5 is thinking
+800   1 is sleeping
+800   3 is sleeping
+800   4 has taken a fork
+first: 3
+800   4 has taken a fork
+second: 4
+800   4 is eating
+1200   1 is thinking
+1200   4 is sleeping
+1200   3 is thinking
+1600   4 is thinking

@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:10:20 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/13 14:13:13 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/13 16:26:00 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	exact_usleep(long sleeptime_us, t_arguments *args)
 		else
 		{
 			while (gettime_us(args) - start < sleeptime_us)
-				usleep(0.1);
+				usleep(1);
 		}
 	}
 }

@@ -6,15 +6,19 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/13 14:08:47 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:41:19 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-/*assign two forks to each philo. which one to take first
-and which one to take second is important to avoid DEADLOCK.
-deadlock would be f.e. every philo takes left fork first and
-waits for the second -> everyone is blocked */
+/*
+	assign two forks to each philo. which one to take first
+	and which one to take second is important to avoid DEADLOCK.
+	deadlock would be f.e. every philo takes left fork first and
+	waits for the second -> everyone is blocked
+	even philos take first right fork
+	odd philos take first left fork
+*/
 static void	assign_forks(t_philo *philo, t_fork *forks, int position_philo)
 {
 	if (philo->id % 2 == 0)

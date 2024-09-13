@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/13 15:11:16 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/13 18:09:09 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ typedef struct s_philo
 
 typedef enum e_safe_thread
 {
-	CREATE,
 	JOIN,
 	DETACH
 }				t_safe_thread;
@@ -82,12 +81,12 @@ typedef enum e_philo_stauts
 	DIED
 }				t_philo_status;
 
-// void	free_all(t_arguments *args);
+void	free_all(t_arguments *args);
+//
 void	error_exit(t_arguments *args, char *error);
 void	parsing(int argc, char **argv, t_arguments *args);
 void	*safe_malloc(t_arguments *args, int bytes);
-void	safe_thread(t_arguments *args, pthread_t *thread_id,
-		void* (*function)(void *), void *arg, t_safe_thread todo);
+void	safe_thread(t_arguments *args, pthread_t thread_id, t_safe_thread todo);
 void	safe_mutex(t_arguments *args, t_mtx *mutex, t_safe_mutex todo);
 void	data_init(t_arguments *args);
 void	meal_start(t_arguments *args);
