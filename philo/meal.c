@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/14 13:19:14 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/14 15:40:27 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*one_philo(void *ph)
 
 	while (!get_bool(philo->args, philo->args->args_mutex,
 			philo->args->all_philos_ready))
-		usleep(10);
+		usleep(1);
 	set_long(philo->args, philo->args->args_mutex,
 		&philo->args->nbr_philos_ready, philo->args->nbr_philos_ready + 1);
 	set_long(philo->args, philo->args->args_mutex,
@@ -44,6 +44,16 @@ void	*one_philo(void *ph)
 static void	think(t_arguments *args, t_philo philo)
 {
 	print_status(args, philo, THINK);
+	// if (args->nbr_philos % 2 == 0)
+	// {
+	// 	if (philo.id % 2 == 0)
+	// 		exact_usleep(30000, args);
+	// }
+	// else
+	// {
+	// 	if (philo.id % 2 =! 0)
+
+	// }
 }
 
 static void	sleeping(t_arguments *args, t_philo philo)
@@ -123,13 +133,13 @@ void	create_philo_threads(t_arguments *args)
 			meal_simulation, &args->philos[i]))
 				error_exit(args, "pthread create failed");
 		i++;
-		printf("thread\n");
 	}
 }
 
 /*
 	create one thread for each philo
 	only if all threads are made and ready we start simulation
+	join is for waiting and also for cleaning up in the end
 */
 void	meal_start(t_arguments *args)
 {
@@ -154,4 +164,6 @@ void	meal_start(t_arguments *args)
 		safe_thread(args, args->philos[i].thread_id, JOIN);
 		i++;
 	}
+	set_bool(args, args->args_mutex, &args->end_simulation, true);
+	safe_thread(args, args->check_death, JOIN);
 }
