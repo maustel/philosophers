@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/13 17:41:19 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/14 10:00:03 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ void	data_init(t_arguments *args)
 
 	i = 0;
 	args->end_simulation = false;
-	args->all_threads_ready = false;
+	args->all_philos_ready = false;
+	args->nbr_philos_ready = 0;
 	safe_mutex(args, &args->args_mutex, INIT);
 	safe_mutex(args, &args->write_mutex, INIT);
 	args->philos = NULL;

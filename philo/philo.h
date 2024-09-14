@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/13 18:09:09 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/14 10:16:58 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,20 @@ typedef struct s_philo	t_philo;
 
 typedef struct s_arguments
 {
-	int		nbr_philos;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		nbr_must_eat;
-	long	start_simulation;
-	bool	end_simulation; // a philo dies or all philos are full
-	bool	all_threads_ready;
-	t_mtx	args_mutex;
-	t_mtx	write_mutex;
-	t_fork	*forks; //array to all our forks
-	t_philo	*philos; //array to all our philos
+	int			nbr_philos;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	int			nbr_must_eat;
+	long		start_simulation;
+	bool		end_simulation; // a philo dies or all philos are full
+	bool		all_philos_ready;
+	long		nbr_philos_ready;
+	pthread_t	check_death;
+	t_mtx		args_mutex;
+	t_mtx		write_mutex;
+	t_fork		*forks; //array to all our forks
+	t_philo		*philos; //array to all our philos
 }				t_arguments;
 
 typedef struct s_fork
@@ -98,3 +100,4 @@ void	set_bool(t_arguments *args, t_mtx mutex, bool *dest, bool value);
 void	set_long(t_arguments *args, t_mtx mutex, long *dest, long value);
 bool	get_long(t_arguments *args, t_mtx mutex, long dest);
 void	print_status(t_arguments *args, t_philo philo, t_philo_status status);
+void	*supervise_meal(void *ar);

@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:10:20 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/13 16:26:00 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/14 09:48:26 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,3 +55,5 @@ void	exact_usleep(long sleeptime_us, t_arguments *args)
 		}
 	}
 }
+
+
