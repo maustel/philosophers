@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 09:33:40 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/14 14:52:21 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/19 16:07:41 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	*supervise_meal(void *ar)
 
 	args = (t_arguments *) ar;
 	while (!all_philos_active(args))
-		usleep(10);
+		usleep(100);
 	while (!simulation_finished(args))
 	{
 		i = 0;

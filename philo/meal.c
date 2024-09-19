@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/14 15:40:27 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/19 16:35:15 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 		->every philo starts simultaneously
 	4) Join everyone
 */
-
 void	*one_philo(void *ph)
 {
 	t_philo *philo;
@@ -30,7 +29,7 @@ void	*one_philo(void *ph)
 
 	while (!get_bool(philo->args, philo->args->args_mutex,
 			philo->args->all_philos_ready))
-		usleep(1);
+		usleep(10);
 	set_long(philo->args, philo->args->args_mutex,
 		&philo->args->nbr_philos_ready, philo->args->nbr_philos_ready + 1);
 	set_long(philo->args, philo->args->args_mutex,
@@ -41,19 +40,26 @@ void	*one_philo(void *ph)
 	return (NULL);
 }
 
-static void	think(t_arguments *args, t_philo philo)
+/*
+	if nbr philos is even -> system is already fair
+	if nbr is odd, there can be unfair scenarios (like one philo
+	eats towo times in a row)
+	-> force philos to think for at least a certain time
+	time_to_think is the available time to think
+*/
+void	think(t_arguments *args, t_philo *philo)
 {
-	print_status(args, philo, THINK);
-	// if (args->nbr_philos % 2 == 0)
-	// {
-	// 	if (philo.id % 2 == 0)
-	// 		exact_usleep(30000, args);
-	// }
-	// else
-	// {
-	// 	if (philo.id % 2 =! 0)
+	int	time_to_think;
 
-	// }
+	print_status(args, *philo, THINK);
+	if (philo->args->nbr_philos % 2 == 0)
+		return ;
+	time_to_think = args->time_to_eat * 2 - args->time_to_sleep;
+	if (time_to_think < 0)
+	{	// time_to_think = 0;
+		return;
+	}
+	exact_usleep(time_to_think * 0.5, args);
 }
 
 static void	sleeping(t_arguments *args, t_philo philo)
@@ -90,6 +96,27 @@ static void	eat(t_arguments *args, t_philo *philo)
 }
 
 /*
+	try to make system more fair
+	if nbr is even ->force even philo to wait for 30ms before doing anything
+	otherwise, some philos would eat twice in a row without thinking
+	and other philos would starve
+	if nbr is odd -> force odd philos to start thinking
+*/
+void	asynchronizer(t_philo *philo)
+{
+	if (philo->args->nbr_philos % 2 == 0)
+	{
+		if (philo->id % 2 == 0)
+			exact_usleep(3000, philo->args);
+	}
+	else
+	{
+		if (philo->id % 2 != 0)
+			think(philo->args, philo);
+	}
+}
+
+/*
 	synchronize beginning of simulation
 	-> wait for all philos
 	->every philo starts simultaneously
@@ -108,12 +135,12 @@ void	*meal_simulation(void *ph)
 		usleep(10);
 	set_long(philo->args, philo->args->args_mutex,
 		&philo->args->nbr_philos_ready, philo->args->nbr_philos_ready + 1);
+	asynchronizer(philo);
 	while (!simulation_finished(philo->args) && !philo->full)
 	{
 		eat(philo->args, philo);
-		// philo full? -> break?
 		sleeping(philo->args, *philo);
-		think(philo->args, *philo);
+		think(philo->args, philo);
 	}
 	return (NULL);
 }

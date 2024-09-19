@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/14 10:16:58 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/19 15:15:51 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,3 +101,4 @@ void	set_long(t_arguments *args, t_mtx mutex, long *dest, long value);
 bool	get_long(t_arguments *args, t_mtx mutex, long dest);
 void	print_status(t_arguments *args, t_philo philo, t_philo_status status);
 void	*supervise_meal(void *ar);
+void	think(t_arguments *args, t_philo *philo);
