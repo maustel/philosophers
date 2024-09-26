@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 13:21:47 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/14 15:18:46 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 17:18:55 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 void	print_status(t_arguments *args, t_philo philo, t_philo_status status)
 {
 	long	time_ms;
+	long	start_sim;
 
-	time_ms = (gettime_us(args) - args->start_simulation) / 1e3;
-	safe_mutex(args, &args->write_mutex, LOCK);
+	start_sim = get_long(args, args->start_mutex, args->start_simulation);
+	time_ms = (gettime_us(args) - start_sim) / 1e3;
+	safe_mutex(args, &args->output_mutex, LOCK);
 	if (!simulation_finished(args))
 	{
 		if (status == FORK)
@@ -35,5 +37,5 @@ void	print_status(t_arguments *args, t_philo philo, t_philo_status status)
 	}
 	else if (status == DIED)
 		printf("\033[31;1m%ld   %d died\033[0m\n", time_ms, philo.id);
-	safe_mutex(args, &args->write_mutex, UNLOCK);
+	safe_mutex(args, &args->output_mutex, UNLOCK);
 }

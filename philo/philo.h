@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/19 15:15:51 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 17:27:06 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,17 @@ typedef struct s_arguments
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			nbr_must_eat;
-	long		start_simulation;
-	bool		end_simulation; // a philo dies or all philos are full
-	bool		all_philos_ready;
-	long		nbr_philos_ready;
+	long		start_simulation;//
+	t_mtx		start_mutex;
+	bool		end_simulation; //
+	t_mtx		end_mutex;
+	bool		all_philos_ready;//
+	t_mtx		all_ready_mutex;
+	long		nbr_philos_ready;//
+	t_mtx		nbr_ready_mutex;
 	pthread_t	check_death;
-	t_mtx		args_mutex;
-	t_mtx		write_mutex;
+	// t_mtx		args_mutex;
+	t_mtx		output_mutex;
 	t_fork		*forks; //array to all our forks
 	t_philo		*philos; //array to all our philos
 }				t_arguments;
@@ -50,13 +54,16 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int			id;
-	long		meals_count;
-	bool		full;
-	long		last_meal_time;
+	long		meals_count;//
+	t_mtx		count_mutex;
+	bool		full;//
+	t_mtx		full_mutex;
+	long		last_meal_time;//
+	t_mtx		meal_time_mutex;
 	t_fork		*first_fork;
 	t_fork		*second_fork;
 	pthread_t	thread_id;
-	t_mtx		philo_mutex;
+	// t_mtx		philo_mutex;
 	t_arguments	*args;
 }				t_philo;
 
@@ -97,8 +104,9 @@ bool	simulation_finished(t_arguments *args);
 void	exact_usleep(long sleeptime_us, t_arguments *args);
 bool	get_bool(t_arguments *args, t_mtx mutex, bool value);
 void	set_bool(t_arguments *args, t_mtx mutex, bool *dest, bool value);
-void	set_long(t_arguments *args, t_mtx mutex, long *dest, long value);
-bool	get_long(t_arguments *args, t_mtx mutex, long dest);
+void	set_long(t_arguments *args, t_mtx *mutex, long *dest, long value);
+long	get_long(t_arguments *args, t_mtx mutex, long dest);
+void	increment(t_arguments *args, t_mtx mutex, long *dest);
 void	print_status(t_arguments *args, t_philo philo, t_philo_status status);
 void	*supervise_meal(void *ar);
 void	think(t_arguments *args, t_philo *philo);

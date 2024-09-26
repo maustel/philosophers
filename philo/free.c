@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:09:31 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/14 15:09:12 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 14:28:21 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,21 @@ void	free_all(t_arguments *args)
 	{
 		while (i < args->nbr_philos)
 		{
-			safe_mutex(args, &args->philos[i].philo_mutex, DESTROY);
+			safe_mutex(args, &args->philos[i].count_mutex, DESTROY);
+			safe_mutex(args, &args->philos[i].full_mutex, DESTROY);
+			safe_mutex(args, &args->philos[i].meal_time_mutex, DESTROY);
 			safe_mutex(args, &args->forks[i].fork, DESTROY);
 			i++;
 		}
 		free (args->philos);
 		free (args->forks);
 	}
-	safe_mutex(args, &args->write_mutex, DESTROY);
-	safe_mutex(args, &args->args_mutex, DESTROY);
+	safe_mutex(args, &args->start_mutex, DESTROY);
+	safe_mutex(args, &args->end_mutex, DESTROY);
+	safe_mutex(args, &args->all_ready_mutex, DESTROY);
+	safe_mutex(args, &args->nbr_ready_mutex, DESTROY);
+	safe_mutex(args, &args->output_mutex, DESTROY);
+	// safe_mutex(args, &args->args_mutex, DESTROY);
 }
 
 void	error_exit(t_arguments *args, char *error)

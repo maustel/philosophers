@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/19 16:35:15 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 17:28:36 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ void	*one_philo(void *ph)
 
 	philo = (t_philo *) ph;
 
-	while (!get_bool(philo->args, philo->args->args_mutex,
+	while (!get_bool(philo->args, philo->args->all_ready_mutex,
 			philo->args->all_philos_ready))
 		usleep(10);
-	set_long(philo->args, philo->args->args_mutex,
-		&philo->args->nbr_philos_ready, philo->args->nbr_philos_ready + 1);
-	set_long(philo->args, philo->args->args_mutex,
+	set_long(philo->args, &philo->args->nbr_ready_mutex,
+		&philo->args->nbr_philos_ready, philo->args->nbr_philos_ready + 1); //mit mutex
+	set_long(philo->args, &philo->args->start_mutex,
 		&philo->args->start_simulation, gettime_us(philo->args));
 	print_status(philo->args, *philo, FORK);
 	while (!simulation_finished(philo->args))
@@ -68,6 +68,20 @@ static void	sleeping(t_arguments *args, t_philo philo)
 	exact_usleep(args->time_to_sleep, args);
 }
 
+bool	philo_full(t_arguments *args, t_philo philo)
+{
+	long	meals;
+
+	meals = 0;
+	if (args->nbr_must_eat > 0)
+	{
+		meals = get_long(args, philo.count_mutex, philo.meals_count);
+		if (args->nbr_must_eat == meals)
+			return (true);
+	}
+	return (false);
+}
+
 /*
 	takes both forks and print status
 	when he has both forks, starts to eat, print status
@@ -79,17 +93,19 @@ static void	sleeping(t_arguments *args, t_philo philo)
 */
 static void	eat(t_arguments *args, t_philo *philo)
 {
+	long	start_sim;
+
+	start_sim = get_long(args, args->start_mutex, args->start_simulation);
 	safe_mutex(args, &philo->first_fork->fork, LOCK);
 	print_status(args, *philo, FORK);
 	safe_mutex(args, &philo->second_fork->fork, LOCK);
 	print_status(args, *philo, FORK);
 	print_status(args, *philo, EAT);
-	set_long(args, philo->philo_mutex, &philo->last_meal_time,
-			gettime_us(args) - (long)args->start_simulation);
-	set_long(args, philo->philo_mutex, &philo->meals_count,
-			philo->meals_count + 1);
-	if (args->nbr_must_eat > 0 && args->nbr_must_eat == philo->meals_count)
-		set_bool(args, philo->philo_mutex, &philo->full, true);
+	set_long(args, &philo->meal_time_mutex, &philo->last_meal_time,
+			gettime_us(args) - start_sim);
+	increment(args, philo->count_mutex, &philo->meals_count); //changed
+	if (philo_full(args, *philo))								//changed
+		set_bool(args, philo->full_mutex, &philo->full, true);
 	exact_usleep(args->time_to_eat, args);
 	safe_mutex(args, &philo->first_fork->fork, UNLOCK);
 	safe_mutex(args, &philo->second_fork->fork, UNLOCK);
@@ -130,13 +146,14 @@ void	*meal_simulation(void *ph)
 	t_philo *philo;
 
 	philo = (t_philo *) ph;
-	while (!get_bool(philo->args, philo->args->args_mutex,
+	while (!get_bool(philo->args, philo->args->all_ready_mutex,
 			philo->args->all_philos_ready))
 		usleep(10);
-	set_long(philo->args, philo->args->args_mutex,
-		&philo->args->nbr_philos_ready, philo->args->nbr_philos_ready + 1);
+	increment(philo->args, philo->args->nbr_ready_mutex,
+		&philo->args->nbr_philos_ready); //changed
 	asynchronizer(philo);
-	while (!simulation_finished(philo->args) && !philo->full)
+	while (!simulation_finished(philo->args) &&
+		!get_bool(philo->args, philo->full_mutex, philo->full))
 	{
 		eat(philo->args, philo);
 		sleeping(philo->args, *philo);
@@ -183,14 +200,17 @@ void	meal_start(t_arguments *args)
 		create_philo_threads(args);
 	if (pthread_create(&args->check_death, NULL, supervise_meal, args))
 		error_exit(args, "pthread create failed");
-	set_long(args, args->args_mutex, &args->start_simulation,
+	// printf("start simulation before set:%d\n", args->start_simulation);
+	set_long(args, &args->start_mutex, &args->start_simulation,
 		gettime_us(args));
-	set_bool(args, args->args_mutex, &args->all_philos_ready, true);
+	// printf("start simulation after set:%ld\n", get_long(args, args->start_mutex, args->start_simulation));
+	set_bool(args, args->all_ready_mutex, &args->all_philos_ready, true);
+	// printf("[[philos ready: %d]]\n", get_bool(args, args->all_ready_mutex, args->all_philos_ready));
 	while (i < args->nbr_philos)
 	{
 		safe_thread(args, args->philos[i].thread_id, JOIN);
 		i++;
 	}
-	set_bool(args, args->args_mutex, &args->end_simulation, true);
+	set_bool(args, args->end_mutex, &args->end_simulation, true);
 	safe_thread(args, args->check_death, JOIN);
 }

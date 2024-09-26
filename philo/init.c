@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/14 10:00:03 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 15:38:54 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ static void	init_philos(t_arguments *args)
 		args->philos[i].last_meal_time = 0;
 		args->philos[i].args = args;
 		assign_forks(&args->philos[i], args->forks, i);
-		safe_mutex(args, &args->philos[i].philo_mutex, INIT);
+		// safe_mutex(args, &args->philos[i].philo_mutex, INIT);
+		safe_mutex(args, &args->philos[i].count_mutex, INIT);
+		safe_mutex(args, &args->philos[i].full_mutex, INIT);
+		safe_mutex(args, &args->philos[i].meal_time_mutex, INIT);
 		i++;
 	}
 }
@@ -65,8 +68,13 @@ void	data_init(t_arguments *args)
 	args->end_simulation = false;
 	args->all_philos_ready = false;
 	args->nbr_philos_ready = 0;
-	safe_mutex(args, &args->args_mutex, INIT);
-	safe_mutex(args, &args->write_mutex, INIT);
+	args->start_simulation = 0;
+	// safe_mutex(args, &args->args_mutex, INIT);
+	safe_mutex(args, &args->start_mutex, INIT);
+	safe_mutex(args, &args->end_mutex, INIT);
+	safe_mutex(args, &args->all_ready_mutex, INIT);
+	safe_mutex(args, &args->nbr_ready_mutex, INIT);
+	safe_mutex(args, &args->output_mutex, INIT);
 	args->philos = NULL;
 	args->forks = NULL;
 	args->philos = safe_malloc(args, sizeof(t_philo) * args->nbr_philos);
