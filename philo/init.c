@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/26 15:38:54 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 17:50:55 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,10 @@ void	data_init(t_arguments *args)
 	safe_mutex(args, &args->output_mutex, INIT);
 	args->philos = NULL;
 	args->forks = NULL;
-	args->philos = safe_malloc(args, sizeof(t_philo) * args->nbr_philos);
-	args->forks = safe_malloc(args, sizeof(t_fork) * args->nbr_philos);
+	// args->philos = safe_malloc(args, sizeof(t_philo) * args->nbr_philos);
+	// args->forks = safe_malloc(args, sizeof(t_fork) * args->nbr_philos);
+	args->philos = malloc(sizeof(t_philo) * args->nbr_philos);
+	args->forks = malloc(sizeof(t_fork) * args->nbr_philos);
 	while (i < args->nbr_philos)
 	{
 		safe_mutex(args, &args->forks[i].fork, INIT);

@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/26 17:27:06 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 17:41:20 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,11 @@ void	meal_start(t_arguments *args);
 long	gettime_us(t_arguments *args);
 bool	simulation_finished(t_arguments *args);
 void	exact_usleep(long sleeptime_us, t_arguments *args);
-bool	get_bool(t_arguments *args, t_mtx mutex, bool value);
-void	set_bool(t_arguments *args, t_mtx mutex, bool *dest, bool value);
+bool	get_bool(t_arguments *args, t_mtx *mutex, bool *value);
+void	set_bool(t_arguments *args, t_mtx *mutex, bool *dest, bool value);
 void	set_long(t_arguments *args, t_mtx *mutex, long *dest, long value);
-long	get_long(t_arguments *args, t_mtx mutex, long dest);
-void	increment(t_arguments *args, t_mtx mutex, long *dest);
+long	get_long(t_arguments *args, t_mtx *mutex, long *dest);
+void	increment(t_arguments *args, t_mtx *mutex, long *dest);
 void	print_status(t_arguments *args, t_philo philo, t_philo_status status);
 void	*supervise_meal(void *ar);
 void	think(t_arguments *args, t_philo *philo);

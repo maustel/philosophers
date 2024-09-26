@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 13:21:47 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/26 17:18:55 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/26 17:43:23 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_status(t_arguments *args, t_philo philo, t_philo_status status)
 	long	time_ms;
 	long	start_sim;
 
-	start_sim = get_long(args, args->start_mutex, args->start_simulation);
+	start_sim = get_long(args, &args->start_mutex, &args->start_simulation);
 	time_ms = (gettime_us(args) - start_sim) / 1e3;
 	safe_mutex(args, &args->output_mutex, LOCK);
 	if (!simulation_finished(args))
