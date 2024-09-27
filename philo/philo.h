@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 12:38:29 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:24:27 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_philo
 {
 	int			id;
 	long		meals_count;//
-	t_mtx		count_mutex;
+	// t_mtx		count_mutex;
 	bool		full;//
 	t_mtx		full_mutex;
 	long		last_meal_time;//
@@ -74,6 +74,7 @@ typedef enum e_err
 	E_NPHILO,
 	E_INPUT,
 	E_MUTEX,
+	E_THREAD,
 	E_MALLOC
 }			t_err;
 
@@ -106,19 +107,19 @@ void	free_all(t_arguments *args);
 void	error_exit(t_arguments *args, char *error);
 int		err(t_err err_code);
 int		parsing(int argc, char **argv, t_arguments *args);
-void	*safe_malloc(t_arguments *args, int bytes);
-void	safe_thread(t_arguments *args, pthread_t thread_id, t_safe_thread todo);
-void	safe_mutex(t_arguments *args, t_mtx *mutex, t_safe_mutex todo);
+// void	*safe_malloc(t_arguments *args, int bytes);
+// void	safe_thread(t_arguments *args, pthread_t thread_id, t_safe_thread todo);
+bool	safe_mutex(t_mtx *mutex, t_safe_mutex todo);
 int		data_init(t_arguments *args);
-void	meal_start(t_arguments *args);
+int		meal_start(t_arguments *args);
 long	gettime_us(t_arguments *args);
 bool	simulation_finished(t_arguments *args);
 void	exact_usleep(long sleeptime_us, t_arguments *args);
-bool	get_bool(t_arguments *args, t_mtx *mutex, bool *value);
-void	set_bool(t_arguments *args, t_mtx *mutex, bool *dest, bool value);
-void	set_long(t_arguments *args, t_mtx *mutex, long *dest, long value);
-long	get_long(t_arguments *args, t_mtx *mutex, long *dest);
-void	increment(t_arguments *args, t_mtx *mutex, long *dest);
-void	print_status(t_arguments *args, t_philo philo, t_philo_status status);
+bool	get_bool(t_mtx *mutex, bool *value);
+void	set_bool(t_mtx *mutex, bool *dest, bool value);
+void	set_long(t_mtx *mutex, long *dest, long value);
+long	get_long(t_mtx *mutex, long *dest);
+void	increment(t_mtx *mutex, long *dest);
+int		print_status(t_arguments *args, t_philo philo, t_philo_status status);
 void	*supervise_meal(void *ar);
 void	think(t_arguments *args, t_philo *philo);

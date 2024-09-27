@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:22 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 12:35:33 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 15:04:16 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,18 @@ void	test_function(t_arguments *args)
 int	main(int argc, char	**argv)
 {
 	t_arguments	args;
+	// int erri;
 
 	if (argc < 5 || argc > 6)
 		return (err(E_NARGS));
 	if (parsing(argc, argv, &args))
 		return (1);
+	if (args.nbr_must_eat == 0)
+		return (0);
 	if (data_init(&args))
-		return (2);
-	meal_start(&args);
+		return (2); //freefunktion when return != 0
+	if (meal_start(&args))
+		return (3);
 	// test_function(&args);
 	free_all(&args);
 	return (0);

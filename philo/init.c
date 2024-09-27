@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 12:36:28 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:11:02 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	assign_forks(t_philo *philo, t_fork *forks, int position_philo)
 }
 
 //initialize philo parameters
-static void	init_philos(t_arguments *args)
+static int	init_philos(t_arguments *args)
 {
 	int	i;
 
@@ -47,12 +47,46 @@ static void	init_philos(t_arguments *args)
 		args->philos[i].last_meal_time = 0;
 		args->philos[i].args = args;
 		assign_forks(&args->philos[i], args->forks, i);
-		// safe_mutex(args, &args->philos[i].philo_mutex, INIT);
-		safe_mutex(args, &args->philos[i].count_mutex, INIT);
-		safe_mutex(args, &args->philos[i].full_mutex, INIT);
-		safe_mutex(args, &args->philos[i].meal_time_mutex, INIT);
+		// printf("%i %i %i\n", i, args->philos[i].first_fork->fork_id, args->philos[i].second_fork->fork_id);
+		// if (safe_mutex(&args->philos[i].count_mutex, INIT))
+		// 	return (err(E_MUTEX));
+		if (safe_mutex(&args->philos[i].full_mutex, INIT))
+			return (err(E_MUTEX));
+		if (safe_mutex(&args->philos[i].meal_time_mutex, INIT))
+			return (err(E_MUTEX));
 		i++;
 	}
+	return (0);
+}
+
+static int	init_forks(t_arguments *args)
+{
+	int	i;
+
+	i = 0;
+	while (i < args->nbr_philos)
+	{
+		if (safe_mutex(&args->forks[i].fork, INIT))
+			return (err(E_MUTEX));
+		args->forks[i].fork_id = i;
+		i++;
+	}
+	return (0);
+}
+
+static int	init_args_mutex(t_arguments *args)
+{
+	if (safe_mutex(&args->start_mutex, INIT))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->end_mutex, INIT))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->all_ready_mutex, INIT))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->nbr_ready_mutex, INIT))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->output_mutex, INIT))
+		return (err(E_MUTEX));
+	return (0);
 }
 
 /*
@@ -62,30 +96,23 @@ static void	init_philos(t_arguments *args)
 */
 int	data_init(t_arguments *args)
 {
-	int	i;
-
-	i = 0;
 	args->end_simulation = false;
 	args->all_philos_ready = false;
 	args->nbr_philos_ready = 0;
 	args->start_simulation = 0;
-	safe_mutex(args, &args->start_mutex, INIT);
-	safe_mutex(args, &args->end_mutex, INIT);
-	safe_mutex(args, &args->all_ready_mutex, INIT);
-	safe_mutex(args, &args->nbr_ready_mutex, INIT);
-	safe_mutex(args, &args->output_mutex, INIT);
+	if (init_args_mutex(args))
+		return (1);
 	args->philos = NULL;
 	args->forks = NULL;
-	// args->philos = safe_malloc(args, sizeof(t_philo) * args->nbr_philos);
-	// args->forks = safe_malloc(args, sizeof(t_fork) * args->nbr_philos);
 	args->philos = malloc(sizeof(t_philo) * args->nbr_philos);
+	if (!args->philos)
+		return (err(E_MALLOC));
 	args->forks = malloc(sizeof(t_fork) * args->nbr_philos);
-	while (i < args->nbr_philos)
-	{
-		safe_mutex(args, &args->forks[i].fork, INIT);
-		args->forks[i].fork_id = i;
-		i++;
-	}
-	init_philos(args);
+	if (!args->forks)
+		return (err(E_MALLOC));
+	if (init_forks(args))
+		return (1);
+	if (init_philos(args))
+		return (1);
 	return (0);
 }
