@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/26 17:50:55 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 12:36:28 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	init_philos(t_arguments *args)
 
 	./philo [number philos][time_to_die][time_to_eat][time_to_sleep][nbr_must_eat]
 */
-void	data_init(t_arguments *args)
+int	data_init(t_arguments *args)
 {
 	int	i;
 
@@ -69,7 +69,6 @@ void	data_init(t_arguments *args)
 	args->all_philos_ready = false;
 	args->nbr_philos_ready = 0;
 	args->start_simulation = 0;
-	// safe_mutex(args, &args->args_mutex, INIT);
 	safe_mutex(args, &args->start_mutex, INIT);
 	safe_mutex(args, &args->end_mutex, INIT);
 	safe_mutex(args, &args->all_ready_mutex, INIT);
@@ -88,4 +87,5 @@ void	data_init(t_arguments *args)
 		i++;
 	}
 	init_philos(args);
+	return (0);
 }

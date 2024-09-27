@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:22 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/26 12:30:24 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 12:35:33 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,22 @@ int	main(int argc, char	**argv)
 	t_arguments	args;
 
 	if (argc < 5 || argc > 6)
-	{
-		error_exit(NULL, "Wrong amount of arguments!");
-	}
-	parsing(argc, argv, &args);
-	data_init(&args);
+		return (err(E_NARGS));
+	if (parsing(argc, argv, &args))
+		return (1);
+	if (data_init(&args))
+		return (2);
 	meal_start(&args);
 	// test_function(&args);
 	free_all(&args);
 	return (0);
-	
+
 }
 
+/*
+parsing()
+ERR_TOOMANYARGC = 1
+ERR_FILENOTEXISTS = 2
+ERR_WRONGCHARDETECTED = 3
+ERR_TOOMANYWHITESPACES = 4
+*/

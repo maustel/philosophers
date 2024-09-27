@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:34:35 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/19 15:59:58 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 12:31:51 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static int	philo_atoi(char *str)
 	if (*str == '+')
 		str++;
 	if (*str == '-')
-		error_exit(NULL, "Only positive numbers are valid!");
+		return (-1);
 	nbr = 0;
 	if (*str < '0' || *str > '9')
-		error_exit(NULL, "Input is not a legit number!");
+		return (-1);
 	len = 0;
 	while (str && '0' <= *str && *str <= '9')
 	{
@@ -38,28 +38,34 @@ static int	philo_atoi(char *str)
 		len++;
 	}
 	if (len > 10 || nbr > INT_MAX)
-		error_exit(NULL, "Value too big, INT_MAX is limit!");
+		return (-1);
 	return ((int)(nbr * minus));
 }
 
 /*
 	usleep wants microseconds [us] --> us = ms * 1000
 */
-void	parsing(int argc, char **argv, t_arguments *args)
+int	parsing(int argc, char **argv, t_arguments *args)
 {
 	args->nbr_philos = philo_atoi(argv[1]);
 	args->time_to_die = philo_atoi(argv[2]) * 1000;
 	args->time_to_eat = philo_atoi(argv[3]) * 1000;
 	args->time_to_sleep = philo_atoi(argv[4]) * 1000;
+	if (args->nbr_philos < 0 || args->time_to_die < 0 || args->time_to_die < 0
+		|| args->time_to_sleep < 0)
+			return (err(E_INPUT));
 	if (argc == 6)
+	{
 		args->nbr_must_eat = philo_atoi(argv[5]);
+		if (args->nbr_must_eat < 0)
+			return (err(E_INPUT));
+	}
 	else
 		args->nbr_must_eat = -1;
 	if (args->time_to_die < 6e4 || args->time_to_eat < 6e4
 		|| args->time_to_sleep < 6e4)
-	{
-		error_exit(NULL, "Use timestamps major than 60ms!\n");
-	}
+			return (err(E_TIMESTAMP));
 	if (args->nbr_philos <= 0 || args->nbr_philos > 200)
-		error_exit(NULL, "Number of philos must be between 1 and 200!");
+		return (err(E_NPHILO));
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/26 17:41:20 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 12:38:29 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,17 @@ typedef struct s_philo
 	t_arguments	*args;
 }				t_philo;
 
+typedef enum e_err
+{
+	E_NARGS = 1,
+	E_TIMESTAMP,
+	E_NPHILO,
+	E_INPUT,
+	E_MUTEX,
+	E_MALLOC
+}			t_err;
+
+
 typedef enum e_safe_thread
 {
 	JOIN,
@@ -93,11 +104,12 @@ typedef enum e_philo_stauts
 void	free_all(t_arguments *args);
 //
 void	error_exit(t_arguments *args, char *error);
-void	parsing(int argc, char **argv, t_arguments *args);
+int		err(t_err err_code);
+int		parsing(int argc, char **argv, t_arguments *args);
 void	*safe_malloc(t_arguments *args, int bytes);
 void	safe_thread(t_arguments *args, pthread_t thread_id, t_safe_thread todo);
 void	safe_mutex(t_arguments *args, t_mtx *mutex, t_safe_mutex todo);
-void	data_init(t_arguments *args);
+int		data_init(t_arguments *args);
 void	meal_start(t_arguments *args);
 long	gettime_us(t_arguments *args);
 bool	simulation_finished(t_arguments *args);
