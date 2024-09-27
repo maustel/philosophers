@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:09:31 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:10:52 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:53:19 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	free_all(t_arguments *args)
 			if (safe_mutex(&args->philos[i].meal_time_mutex, DESTROY))
 				return ;
 				// return (err(E_MUTEX));
-			if (safe_mutex(&args->forks[i].fork, DESTROY))
+			if (safe_mutex(&args->forks[i].fork_mutex, DESTROY))
 				return ;
 				// return (err(E_MUTEX));
 			i++;

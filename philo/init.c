@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:11:02 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:53:27 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	init_forks(t_arguments *args)
 	i = 0;
 	while (i < args->nbr_philos)
 	{
-		if (safe_mutex(&args->forks[i].fork, INIT))
+		if (safe_mutex(&args->forks[i].fork_mutex, INIT))
 			return (err(E_MUTEX));
 		args->forks[i].fork_id = i;
 		i++;

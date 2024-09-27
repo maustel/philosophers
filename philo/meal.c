@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:50:06 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 17:05:06 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ static int	eat(t_arguments *args, t_philo *philo)
 {
 	long	start_sim;
 
-	if (safe_mutex(&philo->first_fork->fork, LOCK))
+	if (safe_mutex(&philo->first_fork->fork_mutex, LOCK))
 		return(err(E_MUTEX));
 	print_status(args, *philo, FORK);
-	if (safe_mutex(&philo->second_fork->fork, LOCK))
+	if (safe_mutex(&philo->second_fork->fork_mutex, LOCK))
 		return(err(E_MUTEX));
 	print_status(args, *philo, FORK);
 	start_sim = get_long(&args->start_mutex, &args->start_simulation);
@@ -112,9 +112,9 @@ static int	eat(t_arguments *args, t_philo *philo)
 	// if (philo_full(args, *philo))
 	// 	set_bool(&philo->full_mutex, &philo->full, true);
 	exact_usleep(args->time_to_eat, args);
-	if (safe_mutex(&philo->first_fork->fork, UNLOCK))
+	if (safe_mutex(&philo->first_fork->fork_mutex, UNLOCK))
 		return(err(E_MUTEX));
-	if (safe_mutex(&philo->second_fork->fork, UNLOCK))
+	if (safe_mutex(&philo->second_fork->fork_mutex, UNLOCK))
 		return(err(E_MUTEX));
 	philo->meals_count++;
 	if (args->nbr_must_eat > 0 && philo->meals_count == args->nbr_must_eat)
@@ -223,8 +223,8 @@ int	meal_start(t_arguments *args)
 		if (create_philo_threads(args))
 			return (1);
 	}
-	if (pthread_create(&args->check_death, NULL, supervise_meal, args))
 	// if (pthread_create(&args->check_death, NULL, test, NULL))
+	if (pthread_create(&args->check_death, NULL, supervise_meal, args))
 		return (err(E_THREAD));
 	set_long(&args->start_mutex, &args->start_simulation,
 		gettime_us(args));

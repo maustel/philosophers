@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:12:08 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:12:44 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 17:02:44 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,7 @@
 
 bool	simulation_finished(t_arguments *args)
 {
-	bool	finished;
-
-	finished = false;
-	finished = get_bool(&args->end_mutex, &args->end_simulation);
-	return (finished);
+	return (get_bool(&args->end_mutex, &args->end_simulation));
 }
 
 void	set_bool(t_mtx *mutex, bool *dest, bool value)

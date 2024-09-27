@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 09:33:40 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:47:17 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 17:00:14 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,17 @@ void	*supervise_meal(void *ar)
 		i = 0;
 		while (i < args->nbr_philos && !simulation_finished(args))
 		{
-			// if (philo_died(&args->philos[i]))
-			if (!get_bool(&args->philos[i].full_mutex, &args->philos[i].full) && philo_died(&args->philos[i]))
-				{
-					set_bool(&args->end_mutex, &args->end_simulation, true);
-					print_status(args, args->philos[i], DIED);
-					return (NULL);
-				}
 			if (all_philos_full(args))
+			{
 				set_bool(&args->end_mutex, &args->end_simulation, true);
+				return (NULL);
+			}
+			else if (philo_died(&args->philos[i]))
+			{
+				set_bool(&args->end_mutex, &args->end_simulation, true);
+				print_status(args, args->philos[i], DIED);
+				return (NULL);
+			}
 			i++;
 		}
 	}

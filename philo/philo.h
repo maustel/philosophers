@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:24:27 by maustel          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:52:35 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_arguments
 
 typedef struct s_fork
 {
-	t_mtx	fork;
+	t_mtx	fork_mutex;
 	int		fork_id;
 }				t_fork;
 
