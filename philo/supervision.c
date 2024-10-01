@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 09:33:40 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:10:19 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:31:25 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static bool	philo_died(t_philo *philo)
 /*
 	check if all threads are running (nbr_philos_ready)
 */
-bool	all_philos_active(t_arguments *args)
+static bool	all_philos_active(t_arguments *args)
 {
 	long	nbr_ready;
 

@@ -6,26 +6,11 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:09:31 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:34:42 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:20:19 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static int	destroy_args_mutex(t_arguments *args)
-{
-	if (safe_mutex(&args->start_mutex, DESTROY))
-		return (1);
-	if (safe_mutex(&args->end_mutex, DESTROY))
-		return (1);
-	if (safe_mutex(&args->all_ready_mutex, DESTROY))
-		return (1);
-	if (safe_mutex(&args->nbr_ready_mutex, DESTROY))
-		return (1);
-	if (safe_mutex(&args->output_mutex, DESTROY))
-		return (1);
-	return (0);
-}
 
 int	free_all(t_arguments *args, int err_nbr)
 {
@@ -36,6 +21,8 @@ int	free_all(t_arguments *args, int err_nbr)
 	{
 		while (i < args->nbr_philos)
 		{
+			// if (safe_mutex(&args->philos[i].count_mutex, DESTROY))
+			// 	return ;
 			if (safe_mutex(&args->philos[i].full_mutex, DESTROY))
 				return (err(E_MUTEX));
 			if (safe_mutex(&args->philos[i].meal_time_mutex, DESTROY))
@@ -47,7 +34,15 @@ int	free_all(t_arguments *args, int err_nbr)
 		free (args->philos);
 		free (args->forks);
 	}
-	if (destroy_args_mutex(args))
+	if (safe_mutex(&args->start_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->end_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->all_ready_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->nbr_ready_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->output_mutex, DESTROY))
 		return (err(E_MUTEX));
 	return (err_nbr);
 }

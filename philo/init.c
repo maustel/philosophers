@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:53:27 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:35:03 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,6 @@ static int	init_philos(t_arguments *args)
 		args->philos[i].last_meal_time = 0;
 		args->philos[i].args = args;
 		assign_forks(&args->philos[i], args->forks, i);
-		// printf("%i %i %i\n", i, args->philos[i].first_fork->fork_id, args->philos[i].second_fork->fork_id);
-		// if (safe_mutex(&args->philos[i].count_mutex, INIT))
-		// 	return (err(E_MUTEX));
 		if (safe_mutex(&args->philos[i].full_mutex, INIT))
 			return (err(E_MUTEX));
 		if (safe_mutex(&args->philos[i].meal_time_mutex, INIT))

@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:20:04 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:35:51 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,18 @@ typedef struct s_arguments
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			nbr_must_eat;
-	long		start_simulation;//
+	long		start_simulation;
 	t_mtx		start_mutex;
-	bool		end_simulation; //
+	bool		end_simulation;
 	t_mtx		end_mutex;
-	bool		all_philos_ready;//
+	bool		all_philos_ready;
 	t_mtx		all_ready_mutex;
-	long		nbr_philos_ready;//
+	long		nbr_philos_ready;
 	t_mtx		nbr_ready_mutex;
 	pthread_t	check_death;
-	// t_mtx		args_mutex;
 	t_mtx		output_mutex;
-	t_fork		*forks; //array to all our forks
-	t_philo		*philos; //array to all our philos
+	t_fork		*forks;
+	t_philo		*philos;
 }				t_arguments;
 
 typedef struct s_fork
@@ -54,16 +53,14 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int			id;
-	long		meals_count;//
-	// t_mtx		count_mutex;
-	bool		full;//
+	long		meals_count;
+	bool		full;
 	t_mtx		full_mutex;
-	long		last_meal_time;//
+	long		last_meal_time;
 	t_mtx		meal_time_mutex;
 	t_fork		*first_fork;
 	t_fork		*second_fork;
 	pthread_t	thread_id;
-	// t_mtx		philo_mutex;
 	t_arguments	*args;
 }				t_philo;
 
@@ -96,7 +93,7 @@ typedef enum e_philo_stauts
 	DIED
 }				t_philo_status;
 
-int	free_all(t_arguments *args, int err);
+int		free_all(t_arguments *args, int err);
 int		err(t_err err_code);
 int		parsing(int argc, char **argv, t_arguments *args);
 bool	safe_mutex(t_mtx *mutex, t_safe_mutex todo);
@@ -113,3 +110,7 @@ void	increment(t_mtx *mutex, long *dest);
 int		print_status(t_arguments *args, t_philo philo, t_philo_status status);
 void	*supervise_meal(void *ar);
 void	think(t_arguments *args, t_philo *philo);
+void	sleeping(t_arguments *args, t_philo philo);
+int		eat(t_arguments *args, t_philo *philo);
+void	*one_philo(void *ph);
+
