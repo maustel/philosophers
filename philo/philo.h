@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:52:35 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:09:47 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ typedef enum e_err
 	E_INPUT,
 	E_MUTEX,
 	E_THREAD,
-	E_MALLOC
+	E_MALLOC,
+	E_GETTIME
 }			t_err;
 
 
@@ -102,9 +103,9 @@ typedef enum e_philo_stauts
 	DIED
 }				t_philo_status;
 
-void	free_all(t_arguments *args);
+int	free_all(t_arguments *args, int err);
 //
-void	error_exit(t_arguments *args, char *error);
+// void	error_exit(t_arguments *args, char *error);
 int		err(t_err err_code);
 int		parsing(int argc, char **argv, t_arguments *args);
 // void	*safe_malloc(t_arguments *args, int bytes);
@@ -112,7 +113,7 @@ int		parsing(int argc, char **argv, t_arguments *args);
 bool	safe_mutex(t_mtx *mutex, t_safe_mutex todo);
 int		data_init(t_arguments *args);
 int		meal_start(t_arguments *args);
-long	gettime_us(t_arguments *args);
+long	gettime_us(void);
 bool	simulation_finished(t_arguments *args);
 void	exact_usleep(long sleeptime_us, t_arguments *args);
 bool	get_bool(t_mtx *mutex, bool *value);

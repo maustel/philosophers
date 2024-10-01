@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:10:20 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/26 17:18:31 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:10:25 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 /*
 	returns time in microseconds
 */
-long	gettime_us(t_arguments *args)
+long	gettime_us(void)
 {
 	struct timeval time_value;
 
 	if (gettimeofday(&time_value, NULL))
-		error_exit(args, "Error gettimeofday");
+		return (err(E_GETTIME));
+		// error_exit(args, "Error gettimeofday");
 	else
 		return ((long)(time_value.tv_sec * 1e6 + time_value.tv_usec));
 	return (42);
@@ -34,8 +35,8 @@ void	exact_usleep(long sleeptime_us, t_arguments *args)
 {
 	long	start;
 
-	start = gettime_us(args);
-	while (gettime_us(args) - start < sleeptime_us)
+	start = gettime_us();
+	while (gettime_us() - start < sleeptime_us)
 	{
 		if (simulation_finished(args))
 			break;

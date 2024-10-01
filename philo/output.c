@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 13:21:47 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:45:17 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:10:10 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	print_status(t_arguments *args, t_philo philo, t_philo_status status)
 	if (safe_mutex(&args->output_mutex, LOCK))
 		return(err(E_MUTEX));
 	start_sim = get_long(&args->start_mutex, &args->start_simulation);
-	time_ms = (gettime_us(args) - start_sim) / 1e3;
+	time_ms = (gettime_us() - start_sim) / 1e3;
 	if (!simulation_finished(args))
 	{
 		if (status == FORK)

@@ -6,13 +6,13 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:09:31 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 16:53:19 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:07:54 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	free_all(t_arguments *args)
+int	free_all(t_arguments *args, int err_nbr)
 {
 	int	i;
 
@@ -23,36 +23,37 @@ void	free_all(t_arguments *args)
 		{
 			// if (safe_mutex(&args->philos[i].count_mutex, DESTROY))
 			// 	return ;
-				// return (err(E_MUTEX));
 			if (safe_mutex(&args->philos[i].full_mutex, DESTROY))
-				return ;
-				// return (err(E_MUTEX));
+				return (err(E_MUTEX));
 			if (safe_mutex(&args->philos[i].meal_time_mutex, DESTROY))
-				return ;
-				// return (err(E_MUTEX));
+				return (err(E_MUTEX));
 			if (safe_mutex(&args->forks[i].fork_mutex, DESTROY))
-				return ;
-				// return (err(E_MUTEX));
+				return (err(E_MUTEX));
 			i++;
 		}
 		free (args->philos);
 		free (args->forks);
 	}
-	safe_mutex(&args->start_mutex, DESTROY);
-	safe_mutex(&args->end_mutex, DESTROY);
-	safe_mutex(&args->all_ready_mutex, DESTROY);
-	safe_mutex(&args->nbr_ready_mutex, DESTROY);
-	safe_mutex(&args->output_mutex, DESTROY);
-
+	if (safe_mutex(&args->start_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->end_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->all_ready_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->nbr_ready_mutex, DESTROY))
+		return (err(E_MUTEX));
+	if (safe_mutex(&args->output_mutex, DESTROY))
+		return (err(E_MUTEX));
+	return (err_nbr);
 }
 
-void	error_exit(t_arguments *args, char *error)
-{
-	if (args)
-		free_all(args);
-	printf("\033[31;1mError!\n%s\033[0m \n", error);
-	exit (1);
-}
+// void	error_exit(t_arguments *args, char *error)
+// {
+// 	if (args)
+// 		free_all(args ,);
+// 	printf("\033[31;1mError!\n%s\033[0m \n", error);
+// 	exit (1);
+// }
 
 int	err(t_err err_code)
 {
@@ -72,6 +73,8 @@ int	err(t_err err_code)
 		err_msg = "Error with Mutex!\n";
 	else if (err_code == E_MALLOC)
 		err_msg = "Error with malloc!\n";
+	else if (err_code == E_GETTIME)
+		err_msg = "Error gettimeofday!\n";
 	i = 0;
 	while (err_msg[i])
 		i++;

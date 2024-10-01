@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 09:33:40 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 17:00:14 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:10:19 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static bool	philo_died(t_philo *philo)
 
 	start_sim= get_long(&philo->args->start_mutex, &philo->args->start_simulation);
 
-	past_time = gettime_us(philo->args) - start_sim;
+	past_time = gettime_us() - start_sim;
 	last_meal_time = get_long(&philo->meal_time_mutex, &philo->last_meal_time);
 	// printf("now:%ld\n", gettime_us(philo.args));
 	// printf("start_sim:%ld\n", philo.args->start_simulation);

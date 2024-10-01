@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 17:05:06 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:10:06 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	*one_philo(void *ph)
 	increment(&philo->args->nbr_ready_mutex,
 		&philo->args->nbr_philos_ready);
 	set_long(&philo->args->start_mutex,
-		&philo->args->start_simulation, gettime_us(philo->args));
+		&philo->args->start_simulation, gettime_us());
 	if (print_status(philo->args, *philo, FORK))
 		return (NULL);
 	while (!simulation_finished(philo->args))
@@ -106,7 +106,7 @@ static int	eat(t_arguments *args, t_philo *philo)
 	print_status(args, *philo, FORK);
 	start_sim = get_long(&args->start_mutex, &args->start_simulation);
 	set_long(&philo->meal_time_mutex, &philo->last_meal_time,
-			gettime_us(args) - start_sim);
+			gettime_us() - start_sim);
 	print_status(args, *philo, EAT);
 	// increment(&philo->count_mutex, &philo->meals_count);
 	// if (philo_full(args, *philo))
@@ -227,7 +227,7 @@ int	meal_start(t_arguments *args)
 	if (pthread_create(&args->check_death, NULL, supervise_meal, args))
 		return (err(E_THREAD));
 	set_long(&args->start_mutex, &args->start_simulation,
-		gettime_us(args));
+		gettime_us());
 	set_bool(&args->all_ready_mutex, &args->all_philos_ready, true);
 	while (i < args->nbr_philos)
 	{

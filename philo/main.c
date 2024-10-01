@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:22 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 15:04:16 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:01:47 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,12 @@ int	main(int argc, char	**argv)
 	if (args.nbr_must_eat == 0)
 		return (0);
 	if (data_init(&args))
-		return (2); //freefunktion when return != 0
+		return (free_all(&args, 2));
 	if (meal_start(&args))
-		return (3);
+		return(free_all(&args, 3));
 	// test_function(&args);
-	free_all(&args);
+	free_all(&args, 0);
 	return (0);
-
 }
 
 /*
