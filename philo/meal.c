@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:10:06 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:17:46 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,11 +218,8 @@ int	meal_start(t_arguments *args)
 			one_philo, &args->philos[i]))
 				return (err(E_THREAD));
 	}
-	else
-	{
-		if (create_philo_threads(args))
+	else if (create_philo_threads(args))
 			return (1);
-	}
 	// if (pthread_create(&args->check_death, NULL, test, NULL))
 	if (pthread_create(&args->check_death, NULL, supervise_meal, args))
 		return (err(E_THREAD));
@@ -231,12 +228,12 @@ int	meal_start(t_arguments *args)
 	set_bool(&args->all_ready_mutex, &args->all_philos_ready, true);
 	while (i < args->nbr_philos)
 	{
-		// safe_thread(args, args->philos[i].thread_id, JOIN); //return (ret(E_THREAT))
-		pthread_join(args->philos[i].thread_id, NULL);
+		if (pthread_join(args->philos[i].thread_id, NULL))
+			return (err(E_THREAD));
 		i++;
 	}
 	set_bool(&args->end_mutex, &args->end_simulation, true);
-	// safe_thread(args, args->check_death, JOIN); //return (ret(E_THREAT))
-	pthread_join(args->check_death, NULL);
+	if (pthread_join(args->check_death, NULL))
+		return (err(E_THREAD));
 	return (0);
 }

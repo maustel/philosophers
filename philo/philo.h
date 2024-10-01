@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:09:47 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:20:04 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,6 @@ typedef enum e_err
 	E_GETTIME
 }			t_err;
 
-
-typedef enum e_safe_thread
-{
-	JOIN,
-	DETACH
-}				t_safe_thread;
-
 typedef enum e_safe_mutex
 {
 	INIT,
@@ -104,12 +97,8 @@ typedef enum e_philo_stauts
 }				t_philo_status;
 
 int	free_all(t_arguments *args, int err);
-//
-// void	error_exit(t_arguments *args, char *error);
 int		err(t_err err_code);
 int		parsing(int argc, char **argv, t_arguments *args);
-// void	*safe_malloc(t_arguments *args, int bytes);
-// void	safe_thread(t_arguments *args, pthread_t thread_id, t_safe_thread todo);
 bool	safe_mutex(t_mtx *mutex, t_safe_mutex todo);
 int		data_init(t_arguments *args);
 int		meal_start(t_arguments *args);

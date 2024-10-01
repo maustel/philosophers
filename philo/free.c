@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:09:31 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:07:54 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:20:19 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,6 @@ int	free_all(t_arguments *args, int err_nbr)
 		return (err(E_MUTEX));
 	return (err_nbr);
 }
-
-// void	error_exit(t_arguments *args, char *error)
-// {
-// 	if (args)
-// 		free_all(args ,);
-// 	printf("\033[31;1mError!\n%s\033[0m \n", error);
-// 	exit (1);
-// }
 
 int	err(t_err err_code)
 {

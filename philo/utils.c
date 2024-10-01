@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:10:20 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:10:25 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 10:20:24 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ long	gettime_us(void)
 
 	if (gettimeofday(&time_value, NULL))
 		return (err(E_GETTIME));
-		// error_exit(args, "Error gettimeofday");
 	else
 		return ((long)(time_value.tv_sec * 1e6 + time_value.tv_usec));
 	return (42);
