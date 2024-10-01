@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 10:26:10 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:29:16 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 15:51:28 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 
 void	*one_philo(void *ph)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *) ph;
-
 	while (!get_bool(&philo->args->all_ready_mutex,
 			&philo->args->all_philos_ready))
 		usleep(10);
@@ -46,11 +45,11 @@ void	think(t_arguments *args, t_philo *philo)
 	if (simulation_finished(args))
 		return ;
 	print_status(args, *philo, THINK);
-	if (philo->args->nbr_philos % 2 == 0)
+	if (philo->nbr_philos % 2 == 0)
 		return ;
-	time_to_think = args->time_to_eat * 2 - args->time_to_sleep;
+	time_to_think = philo->time_to_eat * 2 - philo->time_to_sleep;
 	if (time_to_think < 0)
-		return;
+		return ;
 	exact_usleep(time_to_think * 0.5, args);
 }
 
@@ -59,7 +58,7 @@ void	sleeping(t_arguments *args, t_philo philo)
 	if (simulation_finished(args))
 		return ;
 	print_status(args, philo, SLEEP);
-	exact_usleep(args->time_to_sleep, args);
+	exact_usleep(philo.time_to_sleep, args);
 }
 
 /*
@@ -76,25 +75,22 @@ int	eat(t_arguments *args, t_philo *philo)
 	long	start_sim;
 
 	if (safe_mutex(&philo->first_fork->fork_mutex, LOCK))
-		return(err(E_MUTEX));
+		return (err(E_MUTEX));
 	print_status(args, *philo, FORK);
 	if (safe_mutex(&philo->second_fork->fork_mutex, LOCK))
-		return(err(E_MUTEX));
+		return (err(E_MUTEX));
 	print_status(args, *philo, FORK);
 	start_sim = get_long(&args->start_mutex, &args->start_simulation);
 	set_long(&philo->meal_time_mutex, &philo->last_meal_time,
-			gettime_us() - start_sim);
+		gettime_us() - start_sim);
 	print_status(args, *philo, EAT);
-	// increment(&philo->count_mutex, &philo->meals_count);
-	// if (philo_full(args, *philo))
-	// 	set_bool(&philo->full_mutex, &philo->full, true);
-	exact_usleep(args->time_to_eat, args);
+	exact_usleep(philo->time_to_eat, args);
 	if (safe_mutex(&philo->first_fork->fork_mutex, UNLOCK))
-		return(err(E_MUTEX));
+		return (err(E_MUTEX));
 	if (safe_mutex(&philo->second_fork->fork_mutex, UNLOCK))
-		return(err(E_MUTEX));
+		return (err(E_MUTEX));
 	philo->meals_count++;
-	if (args->nbr_must_eat > 0 && philo->meals_count == args->nbr_must_eat)
+	if (philo->nbr_must_eat > 0 && philo->meals_count == args->nbr_must_eat)
 		set_bool(&philo->full_mutex, &philo->full, true);
 	return (0);
 }

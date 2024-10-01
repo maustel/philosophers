@@ -6,25 +6,11 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:40:39 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:30:28 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 15:50:13 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-// bool	philo_full(t_arguments *args, t_philo philo)
-// {
-// 	long	meals;
-
-// 	meals = 0;
-// 	if (args->nbr_must_eat > 0)
-// 	{
-// 		meals = get_long(&philo.count_mutex, &philo.meals_count);
-// 		if (args->nbr_must_eat == meals)
-// 			return (true);
-// 	}
-// 	return (false);
-// }
 
 /*
 	try to make system more fair
@@ -35,7 +21,7 @@
 */
 static void	asynchronizer(t_philo *philo)
 {
-	if (philo->args->nbr_philos % 2 == 0)
+	if (philo->nbr_philos % 2 == 0)
 	{
 		if (philo->id % 2 == 0)
 			exact_usleep(3000, philo->args);
@@ -58,7 +44,7 @@ static void	asynchronizer(t_philo *philo)
 */
 static void	*meal_simulation(void *ph)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *) ph;
 	while (!get_bool(&philo->args->all_ready_mutex,
@@ -67,8 +53,8 @@ static void	*meal_simulation(void *ph)
 	increment(&philo->args->nbr_ready_mutex,
 		&philo->args->nbr_philos_ready);
 	asynchronizer(philo);
-	while (!simulation_finished(philo->args) &&
-		!get_bool(&philo->full_mutex, &philo->full))
+	while (!simulation_finished(philo->args)
+		&& !get_bool(&philo->full_mutex, &philo->full))
 	{
 		if (eat(philo->args, philo))
 			return (NULL);
@@ -77,7 +63,6 @@ static void	*meal_simulation(void *ph)
 	}
 	return (NULL);
 }
-
 
 /*
 	each philo remains in waitingloop until all of them are created
@@ -90,8 +75,8 @@ int	create_philo_threads(t_arguments *args)
 	while (i < args->nbr_philos)
 	{
 		if (pthread_create(&args->philos[i].thread_id, NULL,
-			meal_simulation, &args->philos[i]))
-				return (err(E_THREAD));
+				meal_simulation, &args->philos[i]))
+			return (err(E_THREAD));
 		i++;
 	}
 	return (0);
@@ -102,39 +87,28 @@ int	create_philo_threads(t_arguments *args)
 	only if all threads are made and ready we start simulation
 	join is for waiting and also for cleaning up in the end
 */
-void	*test(void* a)
-{
-	void* ptr = a;
-
-	ptr = NULL;
-
-	return (ptr);
-}
-
 int	meal_start(t_arguments *args)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	if (args->nbr_philos == 1)
 	{
 		if (pthread_create(&args->philos[0].thread_id, NULL,
-			one_philo, &args->philos[i]))
-				return (err(E_THREAD));
+				one_philo, &args->philos[0]))
+			return (err(E_THREAD));
 	}
 	else if (create_philo_threads(args))
-			return (1);
-	// if (pthread_create(&args->check_death, NULL, test, NULL))
+		return (1);
 	if (pthread_create(&args->check_death, NULL, supervise_meal, args))
 		return (err(E_THREAD));
 	set_long(&args->start_mutex, &args->start_simulation,
 		gettime_us());
 	set_bool(&args->all_ready_mutex, &args->all_philos_ready, true);
-	while (i < args->nbr_philos)
+	while (++i < args->nbr_philos)
 	{
 		if (pthread_join(args->philos[i].thread_id, NULL))
 			return (err(E_THREAD));
-		i++;
 	}
 	set_bool(&args->end_mutex, &args->end_simulation, true);
 	if (pthread_join(args->check_death, NULL))

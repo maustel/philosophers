@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:19:14 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:35:51 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 15:20:28 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ typedef struct s_philo
 	t_fork		*second_fork;
 	pthread_t	thread_id;
 	t_arguments	*args;
+	int			nbr_philos;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	int			nbr_must_eat;
 }				t_philo;
 
 typedef enum e_err
@@ -113,4 +118,3 @@ void	think(t_arguments *args, t_philo *philo);
 void	sleeping(t_arguments *args, t_philo philo);
 int		eat(t_arguments *args, t_philo *philo);
 void	*one_philo(void *ph);
-

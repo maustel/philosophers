@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:39:11 by maustel           #+#    #+#             */
-/*   Updated: 2024/10/01 10:35:03 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 15:19:41 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ static int	init_philos(t_arguments *args)
 			return (err(E_MUTEX));
 		if (safe_mutex(&args->philos[i].meal_time_mutex, INIT))
 			return (err(E_MUTEX));
+		args->philos[i].nbr_philos = args->nbr_philos;
+		args->philos[i].time_to_die = args->time_to_die;
+		args->philos[i].time_to_eat = args->time_to_eat;
+		args->philos[i].time_to_sleep = args->time_to_sleep;
+		args->philos[i].nbr_must_eat = args->nbr_must_eat;
 		i++;
 	}
 	return (0);

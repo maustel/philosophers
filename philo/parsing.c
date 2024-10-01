@@ -6,7 +6,7 @@
 /*   By: maustel <maustel@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:34:35 by maustel           #+#    #+#             */
-/*   Updated: 2024/09/27 12:31:51 by maustel          ###   ########.fr       */
+/*   Updated: 2024/10/01 15:17:48 by maustel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	parsing(int argc, char **argv, t_arguments *args)
 	args->time_to_sleep = philo_atoi(argv[4]) * 1000;
 	if (args->nbr_philos < 0 || args->time_to_die < 0 || args->time_to_die < 0
 		|| args->time_to_sleep < 0)
-			return (err(E_INPUT));
+		return (err(E_INPUT));
 	if (argc == 6)
 	{
 		args->nbr_must_eat = philo_atoi(argv[5]);
@@ -64,7 +64,7 @@ int	parsing(int argc, char **argv, t_arguments *args)
 		args->nbr_must_eat = -1;
 	if (args->time_to_die < 6e4 || args->time_to_eat < 6e4
 		|| args->time_to_sleep < 6e4)
-			return (err(E_TIMESTAMP));
+		return (err(E_TIMESTAMP));
 	if (args->nbr_philos <= 0 || args->nbr_philos > 200)
 		return (err(E_NPHILO));
 	return (0);
